@@ -10,8 +10,15 @@
         <v-toolbar-title>Page title</v-toolbar-title>
 
         <v-spacer/>
-        <v-btn outlined class="ml-3">Главная</v-btn>
-        <v-btn outlined class="ml-3">Фото</v-btn>
+        <v-btn outlined class="ml-3">
+          <router-link to="/">Главная</router-link>
+        </v-btn>
+        <v-btn outlined class="ml-3">
+          <router-link to="/photo">Фото</router-link>
+        </v-btn>
+        <v-btn class="ml-3" color="white">
+          <router-link to="/debtors">Реестр должников</router-link>
+        </v-btn>
 
       </v-app-bar>
     </v-row>
