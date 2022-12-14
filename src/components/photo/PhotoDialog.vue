@@ -2,14 +2,23 @@
   <v-dialog
       v-model="dialogVisible"
       persistent
-      max-width="600"
+      max-width="1200"
   >
     <v-card>
-      <v-card-title>{{ photo.title }}</v-card-title>
+      <v-card-title>{{ full_title }}</v-card-title>
       <v-card-text>
         <v-img
           :src="photo.url"
         />
+        <v-card-actions>
+        <v-spacer/>
+        <v-btn
+            color="green darken-1"
+            text
+            @click="dialogVisible = false"
+            class=""
+        >Закрыть</v-btn>
+        </v-card-actions>
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -31,7 +40,7 @@ export default {
     this.dialogVisible = this.value
   },
   data: () => ({
-    dialogVisible: false
+    dialogVisible: false,
   }),
   watch: {
     value(newValue) {
@@ -40,6 +49,12 @@ export default {
     dialogVisible(newValue) {
       this.$emit('input', newValue)
     }
+  },
+  computed: {
+    full_title() {
+      return `Название фотографии - ${this.photo.title}`
+    }
+
   }
 }
 </script>

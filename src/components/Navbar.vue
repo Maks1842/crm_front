@@ -16,6 +16,9 @@
         <v-btn outlined class="ml-3">
           <router-link to="/photo">Фото</router-link>
         </v-btn>
+        <v-btn outlined class="ml-3">
+          <router-link to="/statistics">Статистика</router-link>
+        </v-btn>
         <v-btn class="ml-3" color="white">
           <router-link to="/debtors">Реестр должников</router-link>
         </v-btn>

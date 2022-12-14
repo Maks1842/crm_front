@@ -1,6 +1,8 @@
 <template>
   <v-container>
-    <PhotoForm @addPhoto="addPhoto"/>
+    <PhotoForm v-if="photos.length < 11" @addPhoto="addPhoto"/>
+    <div v-else>Вы не можете добавить больше фотографий</div>
+<!--    <PhotoForm v-show="dialogVisible" @addPhoto="addPhoto"/>-->
     <v-row>
       <Photo
           v-for="photo in photos"
@@ -8,7 +10,7 @@
           @openPhoto="openPhoto"
       />
     </v-row>
-    <PhotoDialog :photo="currentPhoto" :v-model="dialogVisible"/>
+    <PhotoDialog :photo="currentPhoto" v-model="dialogVisible"/>
   </v-container>
 </template>
 

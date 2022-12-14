@@ -15,8 +15,16 @@ const routes = [
         component: () => import('./pages/PhotosPage')
     },
     {
+        path: '/statistics',
+        component: () => import('./pages/statistics/StatisicsPage')
+    },
+    {
         path: '/debtors',
         component: () => import('./pages/DebtorsPage')
+    },
+    {
+        path: '/organisations',
+        component: () => import('./pages/statistics/OrganistionsPage')
     }
 ]
 
