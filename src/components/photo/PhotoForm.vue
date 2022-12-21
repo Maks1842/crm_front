@@ -16,13 +16,16 @@ export default {
   }),
   methods: {
     addPhoto() {
+      //FileReader() нужен для обработки фотографии получаемой через url: reader.result
       const reader = new FileReader()
       reader.onload = () => {
+
         let photo = {
           id: Date.now(),
           title: this.title,
           url: reader.result
         }
+        //Передаю значение из функции addPhoto() дальше. В данном случае в родительский компонент, в массив 'photos'
         this.$emit('addPhoto', photo)
       }
       reader.readAsDataURL(this.img)

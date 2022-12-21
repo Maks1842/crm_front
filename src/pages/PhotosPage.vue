@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <PhotoForm v-if="photos.length < 11" @addPhoto="addPhoto"/>
+    <PhotoForm v-if="photos.length < 15" @addPhoto="addPhoto"/>
     <div v-else>Вы не можете добавить больше фотографий</div>
 <!--    <PhotoForm v-show="dialogVisible" @addPhoto="addPhoto"/>-->
     <v-row>
