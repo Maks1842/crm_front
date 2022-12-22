@@ -1,38 +1,18 @@
 <template>
   <v-container>
 
-    <v-dialog
-        v-model="checkingDialog"
-        persistent
-        max-width="800"
-    >
+    <v-dialog v-model="checkingDialog" persistent max-width="800">
       <v-card class="pa-4">
         <v-row justify="center">
           <v-card-title> Создать проверку</v-card-title>
         </v-row>
 
-        <v-form
-            ref="form"
-            v-model="valid"
-            lazy-validation
-        >
-          <v-text-field
-              v-model="nameChecking"
-              :rules="nameRules"
-              label="Добавить наименование проверки"
-              required
-              class="px-2"
+        <v-form ref="form" v-model="valid" lazy-validation>
+          <v-text-field v-model="nameChecking" :rules="nameRules" label="Добавить наименование проверки" required class="px-2"
           ></v-text-field>
 
-          <v-text-field
-              :value="dateChecking"
-              label="Выбрать дату проверки"
-              dense
-              readonly
-              class="px-2 pt-2"
-              required
-              @click="dateDialog = true"
-              :rules="[v => !!v || 'Дата не указана']"
+          <v-text-field :value="dateChecking" label="Выбрать дату проверки" dense readonly class="px-2 pt-2" required
+              @click="dateDialog = true" :rules="[v => !!v || 'Дата не указана']"
           />
           <v-dialog v-model="dateDialog" width="300">
             <v-card>
@@ -40,10 +20,7 @@
               <v-date-picker v-model="dateChecking"></v-date-picker>
 
               <v-row class="py-2" align="center" justify="center">
-                <v-btn
-                    color="primary"
-                    width="100"
-                    @click="dateDialog = false">
+                <v-btn color="primary" width="100" @click="dateDialog = false">
                   Ok
                 </v-btn>
               </v-row>
@@ -51,38 +28,22 @@
             </v-card>
           </v-dialog>
 
-          <v-select
-              v-model="regions"
-              :items="itemsReg"
-              :rules="[v => !!v || 'Регион не указан']"
-              label="Выбрать регион проверки"
-              required
-              class="px-2"
+          <v-select v-model="regions" :items="itemsReg" :rules="[v => !!v || 'Регион не указан']" label="Выбрать регион проверки"
+              required class="px-2"
           ></v-select>
 
-          <v-select
-              v-model="departments"
-              :items="itemsDep"
-              :rules="[v => !!v || 'Департамент не указан']"
-              label="Выбрать департамент/министерство проверки"
-              required
-              class="px-2"
-
+          <v-select v-model="departments" :items="itemsDep" :rules="[v => !!v || 'Департамент не указан']" label="Выбрать департамент/министерство проверки"
+              required class="px-2"
           ></v-select>
 
           <v-row justify="center" class="py-2">
-            <v-btn
-                @click="addChecking"
-                class="ml-6 button">
+            <v-btn @click="addChecking" class="ml-6 button">
               Сохранить
             </v-btn>
-            <v-btn
-                @click="checkingDialog = false"
-                class="ml-6 button">
+            <v-btn @click="checkingDialog = false" class="ml-6 button">
               Закрыть
             </v-btn>
           </v-row>
-
         </v-form>
       </v-card>
     </v-dialog>
@@ -142,8 +103,8 @@ export default {
         dateCheck: this.dateChecking,
         regionCheck: this.regions,
         departmentCheck: this.departments,
-        // progresCheck: '',
-        // actions: "",
+        countQuest: 0,
+        countAnser: 0,
       }
       console.log("Проверка 2")
       this.$emit('addChecking', checking)

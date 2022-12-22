@@ -1,7 +1,6 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <CheckingCreate v-model="dialog" @addChecking="addChecking"/>
-
 
     <v-row>
       <v-col class="text-center">
@@ -10,16 +9,6 @@
         </h1>
       </v-col>
     </v-row>
-
-
-    <v-row>
-      <v-col class="text-right">
-        <v-btn outlined @click="dialog=true">
-          Создать проверку
-        </v-btn>
-      </v-col>
-    </v-row>
-
 
     <v-col class="text-center">
       <h2>
@@ -34,84 +23,64 @@
         </h3>
         <v-card>
           <v-card-title>
-            <v-text-field
-                v-model="search"
-                append-icon="mdi-magnify"
-                label="Search"
-                single-line
-                hide-details
+            <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details
             ></v-text-field>
+            <div>
+              <v-btn outlined @click="dialog=true">
+                Создать проверку
+              </v-btn>
+            </div>
           </v-card-title>
-          <v-data-table
-              :headers="headers"
-              :items="listChecking"
-              :search="search"
-          >
+          <v-data-table dense :headers="headers" :items="listChecking" :search="search">
             <template v-slot:item.progresCheck="{ item }">
-              <v-progress-linear class="mb-3"
-                                 item.v-model="valueProg"
-                                 height="15"
-                                 color="green">13 из 76
+              <v-progress-linear class="mb-3" :value="item.countAnser / item.countQuest * 100" height="15" color="green">
+                {{ item.countAnser }} из {{ item.countQuest }}
               </v-progress-linear>
             </template>
 
-            <template v-slot:item.actions="{ item }">
-              <v-icon
-                  small
-                  class="mr-2"
-                  @click="editItem(item)"
-              >
-                mdi-pencil
-              </v-icon>
-              <v-icon
-                  small
-                  @click="deleteItem(item)"
-              >
+            <template v-slot:item.actions="">
+              <router-link to="/organisations">
+                <v-icon small class="mr-2">
+                  mdi-pencil
+                </v-icon>
+              </router-link>
+
+              <v-icon small @click="deleteItem(item)">
                 mdi-delete
               </v-icon>
             </template>
-
           </v-data-table>
         </v-card>
-
-
-        <v-col
-            md="8">
-          <router-link to="/organisations">Наименование проверки 1</router-link>
-          <v-progress-linear class="mb-3"
-                             height="15"
-                             color="green">13 из 76
-          </v-progress-linear>
-          <router-link to="">Наименование проверки 2</router-link>
-          <v-progress-linear class="mb-3"
-                             value="50"
-                             height="15"
-                             color="green">15 из 30
-          </v-progress-linear>
-        </v-col>
 
       </v-col>
       <v-col md="6" class="text-center">
         <h3>
           Завершенные:
         </h3>
-        <v-row>
-          <v-col
-              md="8">
-            <router-link to="">Наименование проверки 1</router-link>
-            <v-progress-linear class="mb-3"
-                               value="15"
-                               height="15"
-                               color="green">13 из 76
-            </v-progress-linear>
-            <router-link to="">Наименование проверки 2</router-link>
-            <v-progress-linear class="mb-3"
-                               value="50"
-                               height="15"
-                               color="green">15 из 30
-            </v-progress-linear>
-          </v-col>
-        </v-row>
+<!--        <div>-->
+<!--          {{ listCheckingComplited }}-->
+<!--        </div>-->
+        <v-card>
+          <v-card-title>
+            <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details
+            ></v-text-field>
+          </v-card-title>
+          <v-data-table dense :headers="headers" :items="listCheckingComplited" :search="search">
+            <template v-slot:item.progresCheck="{ item }">
+              <v-progress-linear class="mb-3" :value="item.countAnser / item.countOrgAll * 100" height="15" color="green">
+                {{ item.countAnser }} из {{ item.countOrgAll }}
+              </v-progress-linear>
+            </template>
+
+            <template v-slot:item.actions="">
+              <router-link to="/debtors">
+                <v-icon small class="mr-2">
+                  mdi-pencil
+                </v-icon>
+              </router-link>
+            </template>
+          </v-data-table>
+        </v-card>
       </v-col>
     </v-row>
 
@@ -156,44 +125,60 @@ export default {
         dateCheck: '15.10.2022',
         regionCheck: 'Чеченская республика',
         departmentCheck: 'Министерство образования',
-        valueProg: 50,
-        countQuest: "80",
-        countAnser: "13",
+        countQuest: 50,
+        countAnser: 45,
       },
       {
         nameCheck: 'Проверка Ставрополь больницы',
         dateCheck: '22.08.2022',
         regionCheck: 'Ставропольский край',
         departmentCheck: 'Министерство здравоохранения',
-        valueProg: 50,
-        countQuest: "76",
-        countAnser: "25",
+        countQuest: 76,
+        countAnser: 25,
       },
       {
         nameCheck: 'Проверка Краснодар музеи',
         dateCheck: '01.06.2022',
         regionCheck: 'Краснодарский край',
         departmentCheck: 'Министерство культуры',
-        valueProg: 50,
-        countQuest: "55",
-        countAnser: "46",
+        countQuest: 55,
+        countAnser: 46,
       },
       {
         nameCheck: 'Проверка Ростов детсады',
         dateCheck: '30.08.2022',
         regionCheck: 'Ростовская область',
         departmentCheck: 'Министерство образования',
-        valueProg: 50,
-        countQuest: "80",
-        countAnser: "76",
+        countQuest: 80,
+        countAnser: 76,
       },
     ],
-
+    listCheckingComplited: [],
   }),
+  mounted() {
+    this.getCheckingApi()
+  },
+  computed: {
+    localeDate() {
+      // Конвертируем число в строку. Для этого существуют специальные методы
+      // toLocaleDateString() или toLocaleString() или toLocaleTimeString()
+      // Итоговая строка будет зависеть от локализации системы пользователя.
+      // Для русской локали это будет "01.02.2020",
+      // для американской "2/1/2020",
+      // для немецкой — "1.2.2020"
+      // Вы НЕ должны устанавливать формат даты самостоятельно
+      return (new Date(this.date)).toLocaleDateString()
+    },
+  },
   methods: {
     addChecking(checking) {
       console.log("Проверка 3")
       this.listChecking.push(checking)
+    },
+    getCheckingApi(){
+      let tokenAccess = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNzMxNTc5LCJqdGkiOiI3N2Y5MzNjNTg3NWU0MGQyYmE5M2RkMjQ3NDRmOGJkNiIsInVzZXJfaWQiOjF9.1Zh9lnelQYWk22Y3ZN6T3YxoJf0c73aWnRQb5Sdg_kY';
+      this.axios.get('http://localhost:8000/api/v1/getCheckingsList/', { headers: {"Authorization" : `Bearer ${tokenAccess}`}, })
+          .then(response => this.listCheckingComplited = response.data)
     }
   }
 }

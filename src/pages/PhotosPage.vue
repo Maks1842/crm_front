@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <PhotoForm v-if="photos.length < 15" @addPhoto="addPhoto"/>
     <div v-else>Вы не можете добавить больше фотографий</div>
 <!--    <PhotoForm v-show="dialogVisible" @addPhoto="addPhoto"/>-->
@@ -40,6 +40,7 @@ export default {
   },
   methods: {
     fetchTodo() {
+
       this.axios.get('https://jsonplaceholder.typicode.com/photos?_limit=10')
           .then(response => this.photos = response.data)
     },
