@@ -1,6 +1,11 @@
 <template>
-  <v-container fluid>
+  <v-container style="margin:10px 0 35px 35px" fluid>
     <CheckingCreate v-model="dialog" @addChecking="addChecking"/>
+    <div>
+      <v-btn class="botton" outlined @click="getCheckingApi">
+        Получить список проверок
+      </v-btn>
+    </div>
 
     <v-row>
       <v-col class="text-center">
@@ -17,24 +22,22 @@
     </v-col>
 
     <v-row>
-      <v-col md="6" class="text-center">
-        <h3>
-          Текущие:
-        </h3>
+      <v-col lg="10" offset-lg="1">
         <v-card>
           <v-card-title>
-            <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details
+            <v-text-field v-model="search" label="Search" single-line hide-details
             ></v-text-field>
             <div>
-              <v-btn outlined @click="dialog=true">
+              <v-btn class="btn-check" outlined @click="dialog=true">
                 Создать проверку
               </v-btn>
             </div>
           </v-card-title>
-          <v-data-table dense :headers="headers" :items="listChecking" :search="search">
+
+          <v-data-table class="table" :headers="headers" :items="listChecking" :search="search" dense :disable-sort=true>
             <template v-slot:item.progresCheck="{ item }">
-              <v-progress-linear class="mb-3" :value="item.countAnser / item.countQuest * 100" height="15" color="green">
-                {{ item.countAnser }} из {{ item.countQuest }}
+              <v-progress-linear class="mb-3" :value="item.countOrgComplit / item.countOrgAll * 100" height="15" color="green">
+                {{ item.countOrgComplit }} из {{ item.countOrgAll }}
               </v-progress-linear>
             </template>
 
@@ -53,36 +56,11 @@
         </v-card>
 
       </v-col>
-      <v-col md="6" class="text-center">
-        <h3>
-          Завершенные:
-        </h3>
-<!--        <div>-->
-<!--          {{ listCheckingComplited }}-->
-<!--        </div>-->
-        <v-card>
-          <v-card-title>
-            <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details
-            ></v-text-field>
-          </v-card-title>
-          <v-data-table dense :headers="headers" :items="listCheckingComplited" :search="search">
-            <template v-slot:item.progresCheck="{ item }">
-              <v-progress-linear class="mb-3" :value="item.countAnser / item.countOrgAll * 100" height="15" color="green">
-                {{ item.countAnser }} из {{ item.countOrgAll }}
-              </v-progress-linear>
-            </template>
-
-            <template v-slot:item.actions="">
-              <router-link to="/debtors">
-                <v-icon small class="mr-2">
-                  mdi-pencil
-                </v-icon>
-              </router-link>
-            </template>
-          </v-data-table>
-        </v-card>
-      </v-col>
     </v-row>
+
+    <div>
+      {{ authStore.tokens }}
+    </div>
 
 
   </v-container>
@@ -91,99 +69,116 @@
 <script>
 import CheckingCreate from "@/components/statistics/CheckingCreate";
 
+import {useAuthStore} from "@/stores/AuthStore";
+import {useCheckingStore} from "@/stores/CheckingStore";
+
 export default {
   name: "StatisicsPage",
   components: {CheckingCreate},
   data: () => ({
     dialog: false,
     search: '',
+    authStore: useAuthStore(),
+    checkingStore: useCheckingStore(),
+
     headers: [
+      {
+        text: 'id',
+        value: 'id',
+        width: 20,
+      },
       {
         text: 'Проверка',
         value: 'nameCheck',
-        // align: 'start' | 'center' | 'end',
         align: 'start',
         sortable: true,
         filterable: true,
-        // groupable: boolean,
-        // divider: boolean,
-        // class: string | string[],
-        // cellClass: string | string[],
-        width: 150,
+        width: 350,
         // filter: (value: any, search: string, item: any) => boolean,
         // sort: (a: any, b: any) => number
       },
-      {text: 'Дата', value: 'dateCheck', width: 50,},
-      {text: 'Регион', value: 'regionCheck', width: 150,},
-      {text: 'Департамент', value: 'departmentCheck', width: 150,},
-      {text: 'Прогресс', value: 'progresCheck', width: 200,},
+      {text: 'Дата', value: 'dateCheck', width: 150,},
+      {text: 'Регион', value: 'regionCheck', width: 300,},
+      {text: 'Департамент', value: 'departmentCheck', width: 300,},
+      {text: 'Прогресс', value: 'progresCheck', width: 250,},
       { text: 'Редактор', value: 'actions', sortable: false },
     ],
     listChecking: [
       {
+        id: 5,
         nameCheck: 'Проверка Грозный школы',
         dateCheck: '15.10.2022',
         regionCheck: 'Чеченская республика',
         departmentCheck: 'Министерство образования',
-        countQuest: 50,
-        countAnser: 45,
+        countOrgAll: 50,
+        countOrgComplit: 45,
       },
       {
+        id: 3,
         nameCheck: 'Проверка Ставрополь больницы',
         dateCheck: '22.08.2022',
         regionCheck: 'Ставропольский край',
         departmentCheck: 'Министерство здравоохранения',
-        countQuest: 76,
-        countAnser: 25,
+        countOrgAll: 76,
+        countOrgComplit: 25,
       },
-      {
-        nameCheck: 'Проверка Краснодар музеи',
-        dateCheck: '01.06.2022',
-        regionCheck: 'Краснодарский край',
-        departmentCheck: 'Министерство культуры',
-        countQuest: 55,
-        countAnser: 46,
-      },
-      {
-        nameCheck: 'Проверка Ростов детсады',
-        dateCheck: '30.08.2022',
-        regionCheck: 'Ростовская область',
-        departmentCheck: 'Министерство образования',
-        countQuest: 80,
-        countAnser: 76,
-      },
+
     ],
-    listCheckingComplited: [],
+    // listOrgsss: [
+    //   {
+    //     name: 'Детский сад №33333 Тест',
+    //     dateCheck: '15.10.2022',
+    //     userCheck: 'Admin',
+    //     personOrg: 'ЖЖЖЖЖЖЖЖЖЖЖ',
+    //     countQuest: 76,
+    //     countAnswr: 45,
+    //   },
+    //   {
+    //     name: 'Республиканская больница 7777777777',
+    //     dateCheck: '15.10.2022',
+    //     userCheck: 'Admin',
+    //     personOrg: 'УУУУУУУУУУУ',
+    //     countQuest: 56,
+    //     countAnswr: 13,
+    //   },
+    //     ]
   }),
   mounted() {
     this.getCheckingApi()
   },
-  computed: {
-    localeDate() {
-      // Конвертируем число в строку. Для этого существуют специальные методы
-      // toLocaleDateString() или toLocaleString() или toLocaleTimeString()
-      // Итоговая строка будет зависеть от локализации системы пользователя.
-      // Для русской локали это будет "01.02.2020",
-      // для американской "2/1/2020",
-      // для немецкой — "1.2.2020"
-      // Вы НЕ должны устанавливать формат даты самостоятельно
-      return (new Date(this.date)).toLocaleDateString()
-    },
-  },
   methods: {
     addChecking(checking) {
-      console.log("Проверка 3")
-      this.listChecking.push(checking)
+      this.listChecking.push(checking,)
     },
+
     getCheckingApi(){
-      let tokenAccess = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNzMxNTc5LCJqdGkiOiI3N2Y5MzNjNTg3NWU0MGQyYmE5M2RkMjQ3NDRmOGJkNiIsInVzZXJfaWQiOjF9.1Zh9lnelQYWk22Y3ZN6T3YxoJf0c73aWnRQb5Sdg_kY';
-      this.axios.get('http://localhost:8000/api/v1/getCheckingsList/', { headers: {"Authorization" : `Bearer ${tokenAccess}`}, })
-          .then(response => this.listCheckingComplited = response.data)
-    }
+      let access = this.authStore.tokens[1].access
+      this.axios.get('http://localhost:8000/api/v1/getCheckingsList/', { headers: {"Authorization" : `Bearer ${access}`},})
+          .then(response => this.listChecking = response.data)
+      this.checkingStore.checkings.push(this.listChecking)
+    },
+
+    // getOrganisationApi() {
+    //   // console.log("tokens = " + accessToken)
+    //   this.axios.post('http://localhost:8000/api/v1/getOrganisationList/?checking_id=1', { headers: {"Authorization" : `Bearer ${this.$data.tokens.access}`}, })
+    //       .then(response => this.itemsOrg = response.data)
+    // },
   }
 }
 </script>
 
 <style scoped>
-
+.btn-check {
+  display: inline-block;
+  color: white;
+  text-decoration: none;
+  padding: .5em 2em;
+  outline: none;
+  border-width: 2px 0;
+  border-style: solid none;
+  border-color: #e3be78 #cea609 #8f6e03;
+  border-radius: 6px;
+  background: linear-gradient(#e4f30f, #b7e316) #058036;
+  transition: 0.2s;
+}
 </style>

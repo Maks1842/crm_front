@@ -97,7 +97,6 @@ export default {
       this.$refs.form.validate()
     },
     addChecking() {
-      console.log("Проверка 1")
       let checking = {
         nameCheck: this.nameChecking,
         dateCheck: this.dateChecking,
@@ -106,7 +105,6 @@ export default {
         countQuest: 0,
         countAnser: 0,
       }
-      console.log("Проверка 2")
       this.$emit('addChecking', checking)
     },
   },
