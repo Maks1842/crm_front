@@ -6,20 +6,8 @@
         <v-toolbar-title>Page title</v-toolbar-title>
 
         <v-spacer/>
-        <v-btn outlined class="ml-3" @click="getAuthenticationApi">
-          Авторизоваться
-        </v-btn>
-        <v-btn outlined class="ml-3">
-          <router-link to="/">Главная</router-link>
-        </v-btn>
-        <v-btn outlined class="ml-3">
-          <router-link to="/photo">Фото</router-link>
-        </v-btn>
-        <v-btn outlined class="ml-3">
-          <router-link to="/statistics">Статистика</router-link>
-        </v-btn>
-        <v-btn class="ml-3" color="white">
-          <router-link to="/debtors">Реестр должников</router-link>
+        <v-btn icon @click="getAuthenticationApi">
+          <v-icon>mdi-home</v-icon>
         </v-btn>
       </v-app-bar>
 
@@ -29,6 +17,7 @@
               v-model="group"
               active-class="deep-purple--text text--accent-4"
           >
+
             <v-list-item>
               <v-list-item-icon>
                 <v-icon>mdi-home</v-icon>
@@ -36,17 +25,63 @@
               <v-list-item-title>Home</v-list-item-title>
             </v-list-item>
 
+            <router-link to="/booking">
+              <v-list-item>
+                <v-list-item-icon>
+                  <v-icon>mdi-step-forward-2</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Booking</v-list-item-title>
+              </v-list-item>
+            </router-link>
+
+            <router-link to="/photo">
+              <v-list-item>
+                <v-list-item-icon>
+                  <v-icon>mdi-image-multiple</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Фотографии</v-list-item-title>
+              </v-list-item>
+            </router-link>
+
+            <router-link to="/debtors">
+              <v-list-item>
+                <v-list-item-icon>
+                  <v-icon>mdi-playlist-plus</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Реестр должников</v-list-item-title>
+              </v-list-item>
+            </router-link>
+
+            <router-link to="/statistics">
+              <v-list-item>
+                <v-list-item-icon>
+                  <v-icon>mdi-file-chart-outline</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Статистика</v-list-item-title>
+              </v-list-item>
+            </router-link>
+
             <v-list-item>
               <v-list-item-icon>
-                <v-icon>mdi-account</v-icon>
+                <v-icon>mdi-library</v-icon>
               </v-list-item-icon>
-              <v-list-item-title>Account</v-list-item-title>
+              <v-list-item-title>Библиотека</v-list-item-title>
             </v-list-item>
+
+
           </v-list-item-group>
         </v-list>
+
+
       </v-navigation-drawer>
 
     </v-row>
+
+<!--    <div style="margin:100px 0 35px 35px" >-->
+<!--      refresh= {{ tokens.refresh }}-->
+<!--      access= {{ tokens.access }}-->
+
+<!--    </div>-->
   </v-container>
 </template>
 
@@ -65,28 +100,43 @@ export default {
         password: '123456'
       }
     ],
-    tok: {},
+    tokens: '',
 
   }),
-  mounted() {
-    this.getAuthenticationApi()
-  },
   methods: {
     getAuthenticationApi() {
       let username = this.userAuthentication[0].username;
       let password = this.userAuthentication[0].password;
 
-      this.axios.post('http://localhost:8000/api/v1/auth/token/', {"username": username, "password": password})
-          .then(response => this.tok = response.data)
-        this.authStore.tokens.push(this.tok)
-      }
+//Авторизация, получение refresh и access токенов
+      const t = this.axios.post('http://localhost:8000/api/v1/auth/token/', {"username": username, "password": password})
+          .then(response => this.tokens = response.data);
+
+      (async () => {
+        const meta = await t;
+        this.authStore.access.push(meta.access);
+
+      })();
+
+      //Отправляю refresh токен, чтобы получить новый access. С задержкой (1 минута = 60000)
+      setInterval(async () => {
+        //Очищаю store от предыдущих записей
+        useAuthStore().$reset();
+
+        const tA= this.axios.post('http://localhost:8000/api/v1/auth/token/refresh/', {"refresh": this.tokens.refresh,})
+            .then(response => response.data);
+
+        const tokAccess = await tA;
+        this.authStore.access.push(tokAccess.access);
+        // console.log("access 2 =" + tokAccess.access);
+      }, 300000)
     }
   }
+}
 
 </script>
 
 <style scoped>
-
 
 
 </style>
