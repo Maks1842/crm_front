@@ -1,5 +1,5 @@
 <template>
-  <v-container app fluid>
+  <v-container fluid>
     <PhotoForm v-if="photos.length < 15" @addPhoto="addPhoto"/>
     <div v-else>Вы не можете добавить больше фотографий</div>
     <!--    <PhotoForm v-show="dialogVisible" @addPhoto="addPhoto"/>-->

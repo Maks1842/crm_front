@@ -6,7 +6,7 @@ import vuetify from './plugins/vuetify'
 import router from './router'
 import axios from 'axios'
 
-import  './assets/static/css/style.css'
+import  './assets/css/style.css'
 
 Vue.prototype.axios = axios
 Vue.use(PiniaVuePlugin)

@@ -1,8 +1,8 @@
 <template>
-  <v-container style="margin:10px 0 35px 35px" fluid>
+  <v-container fluid style="padding-top: 0">
     <CheckingCreate v-model="dialog" @addChecking="addChecking"/>
     <div>
-      <v-btn class="botton" outlined @click="getCheckingApi">
+      <v-btn class="button" outlined @click="getCheckingApi">
         Получить список проверок
       </v-btn>
     </div>
