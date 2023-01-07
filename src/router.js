@@ -37,10 +37,6 @@ const routes = [
         component: () => import('./pages/SettingsPage')
     },
     {
-        path: '/debtors',
-        component: () => import('./pages/test/DebtorsPage')
-    },
-    {
         path: '/photo',
         component: () => import('./pages/test/PhotosPage')
     },

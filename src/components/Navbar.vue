@@ -98,27 +98,11 @@
               </v-list-item>
             </router-link>
 
-            <router-link to="/debtors">
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon>mdi-table-edit</v-icon>
-                </v-list-item-icon>
-                <v-list-item-title>Образец таблицы</v-list-item-title>
-              </v-list-item>
-            </router-link>
-
 
           </v-list-item-group>
         </v-list>
 
-
       </v-navigation-drawer>
-
-<!--    <div style="margin:100px 0 35px 35px" >-->
-<!--      refresh= {{ tokens.refresh }}-->
-<!--      access= {{ tokens.access }}-->
-
-<!--    </div>-->
   </v-container>
 </template>
 
@@ -137,7 +121,7 @@ export default {
         password: '123456'
       }
     ],
-    tokens: '',
+    token: '',
 
   }),
   methods: {
@@ -145,28 +129,30 @@ export default {
       let username = this.userAuthentication[0].username;
       let password = this.userAuthentication[0].password;
 
-//Авторизация, получение refresh и access токенов
-      const t = this.axios.post('http://localhost:8000/api/v1/auth/token/', {"username": username, "password": password})
-          .then(response => this.tokens = response.data);
+//Авторизация, получение auth_token токена
+      const t = this.axios.post('http://localhost:8000/api/v1/auth/token/login/', {"password": password, "username": username})
+          .then(response => this.token = response.data);
+      console.log("token =" + this.token.auth_token);
 
       (async () => {
         const meta = await t;
-        this.authStore.access.push(meta.access);
+        console.log("meta =" + meta.auth_token);
+        this.authStore.token.push(meta.auth_token);
 
       })();
 
       //Отправляю refresh токен, чтобы получить новый access. С задержкой (1 минута = 60000)
-      setInterval(async () => {
-        //Очищаю store от предыдущих записей
-        useAuthStore().$reset();
-
-        const tA= this.axios.post('http://localhost:8000/api/v1/auth/token/refresh/', {"refresh": this.tokens.refresh,})
-            .then(response => response.data);
-
-        const tokAccess = await tA;
-        this.authStore.access.push(tokAccess.access);
-        // console.log("access 2 =" + tokAccess.access);
-      }, 300000)
+      // setInterval(async () => {
+      //   //Очищаю store от предыдущих записей
+      //   useAuthStore().$reset();
+      //
+      //   const tA= this.axios.post('http://localhost:8000/api/v1/auth/token/refresh/', {"refresh": this.tokens.refresh,})
+      //       .then(response => response.data);
+      //
+      //   const tokAccess = await tA;
+      //   this.authStore.access.push(tokAccess.access);
+      //   // console.log("access 2 =" + tokAccess.access);
+      // }, 300000)
     }
   }
 }
